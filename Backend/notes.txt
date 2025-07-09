@@ -1,0 +1,2 @@
+Express JS is unopinionated while Nest JS is opinionated
+MVC is consisting of 3 parts: Models, View, Controller
