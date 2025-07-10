@@ -6,7 +6,7 @@ const ProfilePage = () => {
 
   const [products, setProducts] = useState([]);
   const [editid, seteditid]= useState("");
-  const [editedprice, seteditedprice] = useState("");
+  const [editedprice, seteditedprice] = useState(-1);
 
   const getData = async () => {
     try {
@@ -33,7 +33,7 @@ const ProfilePage = () => {
       const description = event.target.description.value;
       const quantity = event.target.quantity.value;
 
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products`, {
         method: "POST",
         body: JSON.stringify({
           title: title,
@@ -58,9 +58,9 @@ const ProfilePage = () => {
     }
   }
 
-  const handleeditproduct = async (edit_id) => {
+  const handleeditproduct = async (editId) => {
     try{
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${edit_id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products/${editId}`, {
         method: "PATCH",
         body: JSON.stringify({
           price : editedprice
