@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-
 import {HomePage} from "./Pages/HomePage.jsx";
 import {SearchPage} from "./Pages/SearchPage.jsx";
 import {ViewPage} from "./Pages/ViewPage.jsx";

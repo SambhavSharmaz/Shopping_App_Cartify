@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Navbar } from "../Components/Navbar";
 import { Footer } from "../Components/Footer";
+import { useAppcontext } from "../Context/AppContext.js";
 
 const ProfilePage = () => {
 
   const [products, setProducts] = useState([]);
-  const [editid, seteditid]= useState("");
+  const [editid, seteditid] = useState("");
   const [editedprice, seteditedprice] = useState(-1);
+    const {setcount} = useAppcontext();
 
   const getData = async () => {
     try {
@@ -33,7 +35,7 @@ const ProfilePage = () => {
       const description = event.target.description.value;
       const quantity = event.target.quantity.value;
 
-  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products`, {
         method: "POST",
         body: JSON.stringify({
           title: title,
@@ -46,7 +48,7 @@ const ProfilePage = () => {
         }
       });
 
-      if(response.status == 200) {
+      if (response.status == 200) {
         alert("Product added successfully");
       }
       console.log("response", response);
@@ -59,11 +61,11 @@ const ProfilePage = () => {
   }
 
   const handleeditproduct = async (editId) => {
-    try{
+    try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products/${editId}`, {
         method: "PATCH",
         body: JSON.stringify({
-          price : editedprice
+          price: editedprice
         }),
         headers: {
           "Content-Type": "application/json",
@@ -74,18 +76,18 @@ const ProfilePage = () => {
         getData();
         seteditedprice("")
       }
-      else{
+      else {
         alert("Error editing product");
       }
     }
-    catch{
+    catch {
       alert("Error editing product");
       console.log("error");
     }
   }
 
   const handledeleteproduct = async (deleteId) => {
-    try{
+    try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products/${deleteId}`, {
         method: "DELETE",
       })
@@ -93,11 +95,11 @@ const ProfilePage = () => {
         alert("Product deleted successfully");
         getData();
       }
-      else{
+      else {
         alert("Error deleting product");
       }
     }
-    catch{
+    catch {
       alert("Error deleting product");
       console.log("error");
     }
@@ -159,28 +161,77 @@ const ProfilePage = () => {
         </button>
       </form>
 
-      <main className="flex-grow px-6 py-12 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mt-2 mb-6 text-center">My Products</h1>
+      <main className="flex-grow px-4 sm:px-6 py-12 max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold text-gray-800 mb-10 text-center">My Products</h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
           {products.map((product) => (
             <div
               key={product._id}
-              className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300"
+              className="bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between hover:shadow-xl transition duration-300"
             >
-              <h2 className="text-xl font-semibold text-gray-800">{product.title}</h2>
-              {
-                product._id==editid ? (<div>
-                  <input onChange={(e)=>{seteditedprice(e.target.value)}} value={editedprice} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="price" id="price" placeholder="Edit price"/> 
-                  <button onClick={()=>{seteditid(null)}}className="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded">Cancel</button>
-                  <button onClick={()=>{handleeditproduct(product._id)}} className="bg-green-500 hover:bg-green-600 text-white ml-2 p-1 rounded">Update</button></div>): (<p className="text-gray-600 mt-2">Price: ₹{product.price}</p>)
-              }
-              <p className="text-gray-600 mt-2">Quantity: {product.quantity}</p>
-              {product.description && (
-                <p className="text-gray-500 mt-2 text-sm">{product.description}</p>
-              )}
-              <button onClick={()=>{seteditid(product._id)}} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mt-4">Edit</button>
-              <button onClick={()=>{handledeleteproduct(product._id)}} className="bg-red-500 hover:bg-red-600 text-white ml-3 py-2 px-4 rounded mt-4">Delete</button>
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-2">{product.title}</h2>
+
+                {product._id === editid ? (
+                  <div className="mb-4">
+                    <input
+                      onChange={(e) => seteditedprice(e.target.value)}
+                      value={editedprice}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      type="text"
+                      name="price"
+                      placeholder="Edit price"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => seteditid(null)}
+                        className="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-1 rounded-md text-sm"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => handleeditproduct(product._id)}
+                        className="flex-1 bg-green-500 hover:bg-green-600 text-white py-1 rounded-md text-sm"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-700 mb-2 text-lg">Price: ₹{product.price}</p>
+                )}
+                <p className="text-gray-600 mb-1">Quantity: {product.quantity}</p>
+                {product.description && (
+                  <p className="text-gray-500 text-sm mt-1 italic">{product.description}</p>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-between">
+                <button
+                  onClick={() => {
+                    seteditid(product._id);
+                    seteditedprice(product.price);
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={()=>{
+                    setcount((prev)=>{return prev+1})
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  ++
+                </button>
+                <button
+                  onClick={() => handledeleteproduct(product._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>

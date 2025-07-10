@@ -1,12 +1,16 @@
 import { Link } from "react-router";
+import { useAppcontext } from "../Context/Appcontext";
 
 const Navbar = () => {
+
+    const { count } = useAppcontext();
 
     return (
         <div className="bg-black text-white px-6 py-4 shadow-md">
             <div className="flex flex-col sm:flex-row items-center justify-between">
                 <h1 className="text-3xl font-extrabold mb-2 sm:mb-0 tracking-wide">Cartify</h1>
                 <div className="flex items-center gap-2 p-2">
+                    <p>count : {count}</p>
                     <input
                         type="text"
                         placeholder="Search products..."
