@@ -84,6 +84,25 @@ const ProfilePage = () => {
     }
   }
 
+  const handledeleteproduct = async (deleteId) => {
+    try{
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products/${deleteId}`, {
+        method: "DELETE",
+      })
+      if (response.status == 200) {
+        alert("Product deleted successfully");
+        getData();
+      }
+      else{
+        alert("Error deleting product");
+      }
+    }
+    catch{
+      alert("Error deleting product");
+      console.log("error");
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
@@ -161,7 +180,7 @@ const ProfilePage = () => {
                 <p className="text-gray-500 mt-2 text-sm">{product.description}</p>
               )}
               <button onClick={()=>{seteditid(product._id)}} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mt-4">Edit</button>
-              <button className="bg-red-500 hover:bg-red-600 text-white ml-3 py-2 px-4 rounded mt-4">Delete</button>
+              <button onClick={()=>{handledeleteproduct(product._id)}} className="bg-red-500 hover:bg-red-600 text-white ml-3 py-2 px-4 rounded mt-4">Delete</button>
             </div>
           ))}
         </div>
