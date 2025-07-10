@@ -5,10 +5,12 @@ import { Footer } from "../Components/Footer";
 const ProfilePage = () => {
 
   const [products, setProducts] = useState([]);
+  const [editid, seteditid]= useState("");
+  const [editedprice, seteditedprice] = useState("");
 
   const getData = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/products`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products`, {
         method: "GET",
       });
       const result = await response.json();
@@ -53,6 +55,32 @@ const ProfilePage = () => {
     catch (error) {
       console.log("error", error);
       alert("Error adding product");
+    }
+  }
+
+  const handleeditproduct = async (edit_id) => {
+    try{
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${edit_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          price : editedprice
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      if (response.status == 200) {
+        alert("Product edited successfully");
+        getData();
+        seteditedprice("")
+      }
+      else{
+        alert("Error editing product");
+      }
+    }
+    catch{
+      alert("Error editing product");
+      console.log("error");
     }
   }
 
@@ -122,11 +150,18 @@ const ProfilePage = () => {
               className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300"
             >
               <h2 className="text-xl font-semibold text-gray-800">{product.title}</h2>
-              <p className="text-gray-600 mt-2">Price: ₹{product.price}</p>
+              {
+                product._id==editid ? (<div>
+                  <input onChange={(e)=>{seteditedprice(e.target.value)}} value={editedprice} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="price" id="price" placeholder="Edit price"/> 
+                  <button onClick={()=>{seteditid(null)}}className="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded">Cancel</button>
+                  <button onClick={()=>{handleeditproduct(product._id)}} className="bg-green-500 hover:bg-green-600 text-white ml-2 p-1 rounded">Update</button></div>): (<p className="text-gray-600 mt-2">Price: ₹{product.price}</p>)
+              }
               <p className="text-gray-600 mt-2">Quantity: {product.quantity}</p>
               {product.description && (
                 <p className="text-gray-500 mt-2 text-sm">{product.description}</p>
               )}
+              <button onClick={()=>{seteditid(product._id)}} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mt-4">Edit</button>
+              <button className="bg-red-500 hover:bg-red-600 text-white ml-3 py-2 px-4 rounded mt-4">Delete</button>
             </div>
           ))}
         </div>
