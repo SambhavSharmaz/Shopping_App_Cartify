@@ -8,7 +8,7 @@ const ProfilePage = () => {
 
   const getData = async () => {
     try {
-      const response = await fetch("http://localhost:2900/api/v1/products", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/products`, {
         method: "GET",
       });
       const result = await response.json();
