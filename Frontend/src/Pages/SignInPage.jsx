@@ -11,10 +11,12 @@ const SignInPage = () => {
     const dataOBJ = { email, password };
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, {
       method: "POST",
-      body: JSON.stringify(dataOBJ),
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(dataOBJ),
+
     })
     const result = await response.json();
 
@@ -54,6 +56,7 @@ const SignInPage = () => {
                             type="password"
                             name="password"
                             required
+                            autoComplete="off"
                             placeholder="Enter your password"
                             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         />

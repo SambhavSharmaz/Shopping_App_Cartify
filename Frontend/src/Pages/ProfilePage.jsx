@@ -34,6 +34,8 @@ const ProfilePage = () => {
       const price = event.target.price.value;
       const description = event.target.description.value;
       const quantity = event.target.quantity.value;
+      const image = event.target.image.value;
+      const images = [image];
 
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products`, {
         method: "POST",
@@ -42,6 +44,7 @@ const ProfilePage = () => {
           price: price,
           description,
           quantity,
+          images
         }),
         headers: {
           "Content-Type": "application/json",
@@ -156,6 +159,17 @@ const ProfilePage = () => {
           />
         </div>
 
+        <div className="flex flex-col gap-1">
+          <label htmlFor="title" className="text-gray-700 font-medium">URL</label>
+          <input
+            id="image"
+            name="image"
+            type="text"
+            placeholder="Enter product URL"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
         <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg mt-4 transition">
           Submit
         </button>
@@ -171,6 +185,7 @@ const ProfilePage = () => {
               className="bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between hover:shadow-xl transition duration-300"
             >
               <div>
+                <img src={product.images?.[0]} alt={product.title} className="w-full h-48 object-cover rounded-lg mb-4" />
                 <h2 className="text-2xl font-semibold text-gray-900 mb-2">{product.title}</h2>
 
                 {product._id === editid ? (
